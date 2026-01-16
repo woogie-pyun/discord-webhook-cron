@@ -1,0 +1,24 @@
+name: Discord 독서모임 알림
+
+on:
+  schedule:
+    # 매주 화요일 오후 12:30 KST (UTC 03:30)
+    - cron: '30 3 * * 2'
+  # 수동 실행도 가능하게
+  workflow_dispatch:
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Send Discord Notification
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: |
+          curl -H "Content-Type: application/json" \
+               -X POST \
+               -d '{"content": "📢 아아 오늘은 독서모임 날입니다. 다들 까먹지 말고 9시 반 참석 부탁드립니다~"}' \
+               $DISCORD_WEBHOOK_URL
